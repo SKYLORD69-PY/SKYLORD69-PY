@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>AI/ML Engineering Student · Robotics Builder · Researcher · Guitarist</b><br/>
-  <sub>Vijaybhoomi University, AI-ML Engineering '27 &nbsp;·&nbsp; he/him</sub>
+  <sub>Vijaybhoomi University, AI-ML Engineering '28 &nbsp;·&nbsp; he/him</sub>
 </p>
 
 ---
