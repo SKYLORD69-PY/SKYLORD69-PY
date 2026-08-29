@@ -1,0 +1,50 @@
+name: Update Setlist (README Auto-Sync)
+
+on:
+  schedule:
+    - cron: "0 5 * * *"   # 05:00 UTC daily — 10:30 IST
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths:
+      - "scripts/update_readme.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-readme
+  cancel-in-progress: false
+
+jobs:
+  update-setlist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Setlist updater
+        env:
+          GH_USERNAME: SKYLORD69-PY
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/update_readme.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "🎸 Auto-update Setlist [skip ci]"
+            git push
+          fi
