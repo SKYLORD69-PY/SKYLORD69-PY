@@ -152,7 +152,7 @@ system:
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:pranavbagul154@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FF66)](https://github.com/SKYLORD69-PY)
 
-[![Glitch Warning](https://img.shields.io/badge/%E2%9A%A0%EF%B8%8F_DO__NOT__EXECUTE-Glitch__Matrix-FF0040?style=for-the-badge&labelColor=0D1117)](https://www.youtube.com/watch?v=Y7JG63IuaE4)
+[![Glitch Warning](https://img.shields.io/badge/%E2%9A%A0%EF%B8%8F_DO__NOT__EXECUTE-Glitch__Matrix-FF0040?style=for-the-badge&labelColor=0D1117)](https://youtu.be/7ZrZngE8rFM)
 
 </div>
 
