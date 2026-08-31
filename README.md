@@ -81,7 +81,13 @@
 <!-- REPOS_START -->
 | Repository | 🕒 Last Commit | 🛠️ Language | Description |
 |:------------|:--------------:|:------------|:------------|
-| 🔄 _Syncing..._ | — | — | _Live repository data populates here after the first GitHub Actions run — trigger it manually from the **Actions** tab, or wait for the next scheduled sync._ |
+| [**Guitar-Tone-FX-Pedal-Classifier**](https://github.com/SKYLORD69-PY/Guitar-Tone-FX-Pedal-Classifier) | 2026-08-31 | 🐍 Python | An audio signal processing and classical ML pipeline built with Librosa and Scikit-lear... |
+| [**Campus-Quick-Snack-Case-Study**](https://github.com/SKYLORD69-PY/Campus-Quick-Snack-Case-Study) | 2026-08-09 | 🌐 HTML | This Repository includes my research on students studying in Vijaybhoomi University who... |
+| [**Global_Path_AI**](https://github.com/SKYLORD69-PY/Global_Path_AI) | 2026-08-03 | 📜 JavaScript | _No description provided._ |
+| [**nifty100-financial-intelligence-platform**](https://github.com/SKYLORD69-PY/nifty100-financial-intelligence-platform) | 2026-07-26 | 🐍 Python | Production-grade analytics for all 92 Nifty 100 companies. ETL pipeline, 30+ KPIs, scre... |
+| [**bluestock-mf-capstone**](https://github.com/SKYLORD69-PY/bluestock-mf-capstone) | 2026-07-13 | 📓 Jupyter Notebook | Mutual Fund Analytics Platform capstone for Bluestock Fintech: ETL, NAV ingestion, SQL... |
+| [**course-registration-prediction**](https://github.com/SKYLORD69-PY/course-registration-prediction) | 2026-03-24 | 🐍 Python | Automated machine learning pipeline for predicting engineering workshop enrollment with... |
+
 <!-- REPOS_END -->
 
 ---
