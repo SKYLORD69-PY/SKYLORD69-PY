@@ -1,50 +1,47 @@
-name: Update Setlist (README Auto-Sync)
+name: 🔄 Update README — Live Repo Sync
 
-on:
+"on":
   schedule:
-    - cron: "0 5 * * *"   # 05:00 UTC daily — 10:30 IST
-  workflow_dispatch: {}
+    # Runs every 12 hours — 00:00 and 12:00 UTC
+    - cron: "0 */12 * * *"
   push:
-    branches: [ main ]
-    paths:
-      - "scripts/update_readme.py"
-
-permissions:
-  contents: write
+    branches:
+      - main
+  workflow_dispatch: {}
 
 concurrency:
-  group: update-readme
+  group: readme-sync
   cancel-in-progress: false
 
 jobs:
-  update-setlist:
+  update-readme:
+    name: Sync live repository data into README.md
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    timeout-minutes: 10
+    permissions:
+      contents: write
 
-      - name: Set up Python
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v5
+
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: pip install requests
+      - name: 📦 Install dependencies
+        run: pip install --upgrade requests
 
-      - name: Run Setlist updater
+      - name: ⚙️ Run update_repos.py
         env:
-          GH_USERNAME: SKYLORD69-PY
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python scripts/update_readme.py
+        run: python scripts/update_repos.py
 
-      - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "🎸 Auto-update Setlist [skip ci]"
-            git push
-          fi
+      - name: 💾 Commit and push if README changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 chore: refresh live repo data [skip ci]"
+          file_pattern: "README.md"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
