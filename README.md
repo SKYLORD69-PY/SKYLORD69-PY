@@ -8,6 +8,10 @@
 
 <i>Turning caffeine into code, and code into things that (mostly) work.</i>
 
+<br>
+
+<img src="https://komarev.com/ghpvc/?username=SKYLORD69-PY&label=TERMINAL+VISITS&color=00E5FF&style=flat-square" alt="Profile views"/>
+
 </div>
 
 <br>
@@ -72,19 +76,20 @@
 
 ---
 
-## 📀 `ls -la ~/projects --sort=stars`
+## 📀 `ls -la ~/projects --sort=recent`
 
 <!-- REPOS_START -->
-| Repository | ⭐ Stars | 🛠️ Language | Description |
-|:------------|:--------:|:------------|:------------|
-| [**Guitar-Tone-FX-Pedal-Classifier**](https://github.com/SKYLORD69-PY/Guitar-Tone-FX-Pedal-Classifier) | 0 | 🐍 Python | An audio signal processing and classical ML pipeline built with Librosa and Scikit-lear... |
-| [**Campus-Quick-Snack-Case-Study**](https://github.com/SKYLORD69-PY/Campus-Quick-Snack-Case-Study) | 0 | 🌐 HTML | This Repository includes my research on students studying in Vijaybhoomi University who... |
-| [**Global_Path_AI**](https://github.com/SKYLORD69-PY/Global_Path_AI) | 0 | 📜 JavaScript | _No description provided._ |
-| [**nifty100-financial-intelligence-platform**](https://github.com/SKYLORD69-PY/nifty100-financial-intelligence-platform) | 0 | 🐍 Python | Production-grade analytics for all 92 Nifty 100 companies. ETL pipeline, 30+ KPIs, scre... |
-| [**bluestock-mf-capstone**](https://github.com/SKYLORD69-PY/bluestock-mf-capstone) | 0 | 📓 Jupyter Notebook | Mutual Fund Analytics Platform capstone for Bluestock Fintech: ETL, NAV ingestion, SQL... |
-| [**course-registration-prediction**](https://github.com/SKYLORD69-PY/course-registration-prediction) | 0 | 🐍 Python | Automated machine learning pipeline for predicting engineering workshop enrollment with... |
-
+| Repository | 🕒 Last Commit | 🛠️ Language | Description |
+|:------------|:--------------:|:------------|:------------|
+| 🔄 _Syncing..._ | — | — | _Live repository data populates here after the first GitHub Actions run — trigger it manually from the **Actions** tab, or wait for the next scheduled sync._ |
 <!-- REPOS_END -->
+
+---
+
+## 📡 `tail -f ~/.github/events.log`
+
+<!--START_SECTION:activity-->
+<!--END_SECTION:activity-->
 
 ---
 
@@ -152,7 +157,7 @@ system:
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:pranavbagul154@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FF66)](https://github.com/SKYLORD69-PY)
 
-[![Glitch Warning](https://img.shields.io/badge/%E2%9A%A0%EF%B8%8F_DO__NOT__EXECUTE-Glitch__Matrix-FF0040?style=for-the-badge&labelColor=0D1117)](https://youtu.be/7ZrZngE8rFM)
+[![Glitch Warning](https://img.shields.io/badge/%E2%9A%A0%EF%B8%8F_DO__NOT__EXECUTE-Glitch__Matrix-FF0040?style=for-the-badge&labelColor=0D1117)](https://www.youtube.com/watch?v=Y7JG63IuaE4)
 
 </div>
 

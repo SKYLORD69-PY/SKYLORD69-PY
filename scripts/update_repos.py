@@ -19,6 +19,7 @@ import os
 import re
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -132,7 +133,7 @@ def fetch_repos() -> list[dict[str, Any]]:
 def select_top_repos(
     repos: list[dict[str, Any]], limit: int = MAX_REPOS
 ) -> list[dict[str, Any]]:
-    """Drop forks, archived repos, and the profile repo itself; keep the most-starred."""
+    """Drop forks, archived repos, and the profile repo itself; keep the most recently active."""
     candidates = [
         repo
         for repo in repos
@@ -140,7 +141,7 @@ def select_top_repos(
         and not repo.get("archived")
         and repo.get("name", "").lower() != GITHUB_USERNAME.lower()
     ]
-    candidates.sort(key=lambda repo: repo.get("stargazers_count", 0), reverse=True)
+    candidates.sort(key=lambda repo: repo.get("pushed_at") or "", reverse=True)
     return candidates[:limit]
 
 
@@ -149,6 +150,16 @@ def truncate(text: str, limit: int = MAX_DESCRIPTION_LEN) -> str:
     if len(text) <= limit:
         return text
     return text[: limit - 3].rstrip() + "..."
+
+
+def format_commit_date(iso_timestamp: str | None) -> str:
+    """Turn a GitHub ISO-8601 push timestamp into a short, readable date."""
+    if not iso_timestamp:
+        return "—"
+    try:
+        return datetime.strptime(iso_timestamp, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+    except ValueError:
+        return "—"
 
 
 def format_table(repos: list[dict[str, Any]]) -> str:
@@ -160,20 +171,20 @@ def format_table(repos: list[dict[str, Any]]) -> str:
         )
 
     header = (
-        "| Repository | ⭐ Stars | 🛠️ Language | Description |\n"
-        "|:------------|:--------:|:------------|:------------|\n"
+        "| Repository | 🕒 Last Commit | 🛠️ Language | Description |\n"
+        "|:------------|:--------------:|:------------|:------------|\n"
     )
 
     rows = []
     for repo in repos:
         name = repo.get("name", "unknown")
         url = repo.get("html_url", "#")
-        stars = repo.get("stargazers_count", 0)
+        last_commit = format_commit_date(repo.get("pushed_at"))
         language = repo.get("language") or "—"
         icon = LANGUAGE_ICONS.get(language, "🔹")
         description = repo.get("description") or "_No description provided._"
         description = truncate(description.replace("|", "\\|"))
-        rows.append(f"| [**{name}**]({url}) | {stars} | {icon} {language} | {description} |")
+        rows.append(f"| [**{name}**]({url}) | {last_commit} | {icon} {language} | {description} |")
 
     return header + "\n".join(rows) + "\n"
 

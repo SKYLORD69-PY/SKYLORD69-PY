@@ -1,0 +1,33 @@
+name: 📡 Update Recent Activity
+
+"on":
+  schedule:
+    - cron: "0 */6 * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+concurrency:
+  group: activity-sync
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Refresh recent GitHub activity feed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v5
+
+      - name: 📡 Update activity section
+        uses: Readme-Workflows/recent-activity@main
+        with:
+          MAX_LINES: 5
+          COMMIT_MSG: "🤖 chore: refresh recent activity [skip ci]"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
