@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
 
       - name: 📊 Generate stats card
         uses: stats-organization/github-readme-stats-action@v2
@@ -30,7 +32,7 @@ jobs:
           card: stats
           options: "username=${{ github.repository_owner }}&show_icons=true&theme=tokyonight&hide_border=true"
           path: profile/stats.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: 🛠️ Generate top languages card
         uses: stats-organization/github-readme-stats-action@v2
@@ -38,7 +40,7 @@ jobs:
           card: top-langs
           options: "username=${{ github.repository_owner }}&layout=compact&theme=tokyonight&hide_border=true"
           path: profile/top-langs.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: 💾 Commit generated cards
         uses: stefanzweifel/git-auto-commit-action@v5
