@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260">
+<defs>
+<linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#0A0E14"/>
+<stop offset="0.55" stop-color="#0B1220"/>
+<stop offset="1" stop-color="#081018"/>
+</linearGradient>
+<filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+<feGaussianBlur stdDeviation="1.1" result="b"/>
+<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+<rect width="900" height="260" rx="16" fill="url(#bgGrad)"/>
+<rect x="0" y="0" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="4" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="8" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="12" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="16" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="20" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="24" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="28" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="32" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="36" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="40" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="44" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="48" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="52" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="56" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="60" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="64" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="68" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="72" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="76" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="80" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="84" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="88" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="92" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="96" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="100" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="104" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="108" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="112" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="116" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="120" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="124" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="128" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="132" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="136" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="140" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="144" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="148" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="152" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="156" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="160" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="164" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="168" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="172" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="176" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="180" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="184" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="188" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="192" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="196" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="200" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="204" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="208" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="212" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="216" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="220" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="224" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="228" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="232" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="236" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="240" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="244" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="248" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="252" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<rect x="0" y="256" width="900" height="1" fill="#00E5FF" opacity="0.02"/>
+<path d="M0,40 H60 Q70,40 70,50 V90" stroke="#00E5FF" stroke-opacity="0.35" fill="none" stroke-width="1.5"/>
+<circle cx="70" cy="90" r="3" fill="#00E5FF" fill-opacity="0.6"/>
+<path d="M900,220 H840 Q830,220 830,210 V170" stroke="#00FF66" stroke-opacity="0.3" fill="none" stroke-width="1.5"/>
+<circle cx="830" cy="170" r="3" fill="#00FF66" fill-opacity="0.5"/>
+<rect x="24" y="24" width="852" height="212" rx="10" fill="#050810" stroke="#00E5FF" stroke-opacity="0.3"/>
+<rect x="24" y="24" width="852" height="34" rx="10" fill="#0D1420"/>
+<rect x="24" y="48" width="852" height="10" fill="#0D1420"/>
+<circle cx="44" cy="41" r="6" fill="#FF5F56"/>
+<circle cx="64" cy="41" r="6" fill="#FFBD2E"/>
+<circle cx="84" cy="41" r="6" fill="#27C93F"/>
+<text x="450.0" y="46" text-anchor="middle" font-family="monospace" font-size="12" fill="#3A4552">skylord69-py@github — zsh</text>
+<clipPath id="reveal0">
+<rect x="40" y="76" width="0" height="30">
+<animate attributeName="width" from="0" to="339" begin="0.00s" dur="0.78s" fill="freeze" calcMode="linear"/>
+</rect>
+</clipPath>
+<text x="40" y="96" font-family="monospace" font-size="20" clip-path="url(#reveal0)" filter="url(#softGlow)"><tspan fill="#00FF66">guest@skylord69-py</tspan><tspan fill="#3A4552">:~$ </tspan><tspan fill="#00E5FF">whoami</tspan></text>
+<clipPath id="reveal1">
+<rect x="40" y="110" width="0" height="30">
+<animate attributeName="width" from="0" to="472" begin="1.13s" dur="1.09s" fill="freeze" calcMode="linear"/>
+</rect>
+</clipPath>
+<text x="40" y="130" font-family="monospace" font-size="20" clip-path="url(#reveal1)" filter="url(#softGlow)"><tspan fill="#F0F6FC">&gt; AI/ML Engineer &amp; Full Stack Developer</tspan></text>
+<clipPath id="reveal2">
+<rect x="40" y="144" width="0" height="30">
+<animate attributeName="width" from="0" to="448" begin="2.58s" dur="1.04s" fill="freeze" calcMode="linear"/>
+</rect>
+</clipPath>
+<text x="40" y="164" font-family="monospace" font-size="20" clip-path="url(#reveal2)" filter="url(#softGlow)"><tspan fill="#00FF66">guest@skylord69-py</tspan><tspan fill="#3A4552">:~$ </tspan><tspan fill="#00E5FF">cat mission.txt</tspan></text>
+<clipPath id="reveal3">
+<rect x="40" y="178" width="0" height="30">
+<animate attributeName="width" from="0" to="617" begin="3.96s" dur="1.43s" fill="freeze" calcMode="linear"/>
+</rect>
+</clipPath>
+<text x="40" y="198" font-family="monospace" font-size="20" clip-path="url(#reveal3)" filter="url(#softGlow)"><tspan fill="#F0F6FC">&gt; Building things that think, move, and make noise.</tspan></text>
+<rect x="661" y="182" width="10" height="20" fill="#00FF66" opacity="0"><animate attributeName="opacity" begin="5.74s" dur="0.9s" values="0;1;1;0;0" keyTimes="0;0.01;0.5;0.51;1" repeatCount="indefinite"/></rect>
+</svg>

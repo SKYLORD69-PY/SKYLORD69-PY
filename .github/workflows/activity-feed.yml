@@ -1,0 +1,44 @@
+name: Activity Feed
+
+on:
+  schedule:
+    - cron: "43 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: activity-feed
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update recent activity (+ blog posts if configured)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_USER: SKYLORD69-PY
+          # Optional. Settings -> Secrets and variables -> Actions -> Variables tab.
+          # Leave unset if you don't have a blog yet; that section just won't render.
+          BLOG_RSS_URL: ${{ vars.BLOG_RSS_URL }}
+        run: python scripts/activity_feed.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: sync recent activity feed [skip ci]"
+          file_pattern: "README.md"

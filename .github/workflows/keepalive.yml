@@ -1,0 +1,62 @@
+name: Keepalive Safety Net
+
+# Belt-and-suspenders only. In normal operation this workflow finds
+# nothing to do and exits without committing:
+#
+#   - game-of-life.yml commits daily, because the rolling contribution
+#     window guarantees a real content change every day.
+#   - sync-profile-data.yml, activity-feed.yml, and
+#     spotify-now-playing.yml each commit on their own schedules
+#     whenever there's something new.
+#
+# For every one of those to go quiet for 50+ days, you'd need GH_PAT
+# to be dead/expired *and* the account to have zero repo activity,
+# zero Spotify plays, and zero new followers/stars for that whole
+# stretch. Unlikely -- but if it ever happens, this workflow notices
+# and makes one small, honest commit (a "last verified alive"
+# timestamp, not a blank/fake one) so GitHub doesn't disable the
+# other scheduled workflows for inactivity.
+#
+# This intentionally does NOT use a third-party "keepalive" Action.
+# Some users have reported those tripping GitHub's abuse detection
+# when they fire on every run regardless of need -- see the
+# discussion linked in SETUP.md. Hand-rolling ~10 lines of bash that
+# only acts when genuinely necessary avoids that risk entirely.
+
+on:
+  schedule:
+    - cron: "0 3 3 * *"   # once a month is plenty for a 60-day threshold
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Check age of last commit
+        id: age
+        run: |
+          last_commit=$(git log -1 --format=%ct)
+          now=$(date +%s)
+          days=$(( (now - last_commit) / 86400 ))
+          echo "Last commit was $days day(s) ago."
+          echo "days=$days" >> "$GITHUB_OUTPUT"
+
+      - name: Touch a real timestamp file if we're approaching the 60-day limit
+        if: fromJSON(steps.age.outputs.days) >= 50
+        run: |
+          mkdir -p data
+          date -u +"Last verified alive: %Y-%m-%dT%H:%M:%SZ" > data/.keepalive
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/.keepalive
+          git commit -m "chore: keepalive - no other workflow has committed in 50+ days [skip ci]"
+          git push

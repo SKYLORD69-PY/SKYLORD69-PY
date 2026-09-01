@@ -1,235 +1,153 @@
 #!/usr/bin/env python3
 """
 update_repos.py
-================
-Fetches SKYLORD69-PY's top public, non-forked GitHub repositories and
-injects a formatted Markdown table into README.md, between the
-<!-- REPOS_START --> / <!-- REPOS_END --> marker comments.
+----------------
+The ONE feature carried over from the old profile: a live table of the
+repos SKYLORD69-PY is actively working on right now, sorted by most
+recently pushed. Rewritten from scratch against the current GitHub
+REST API (no old code reused).
 
-Usage:
-    python scripts/update_repos.py
-
-Runs automatically every 12 hours (and on every push to main) via
-.github/workflows/update-readme.yml — no manual steps required.
+Design goals:
+  - Zero extra secrets. Uses the default GITHUB_TOKEN that every
+    Actions run already has.
+  - Fails LOUD on real errors (bad token, API down) so GitHub's
+    "workflow run failed" email actually reaches you.
+  - Fails QUIET on "nothing to show yet" (brand-new account, API
+    briefly empty) by writing a graceful placeholder instead of
+    crashing the whole pipeline.
+  - Idempotent: always writes the freshest version of the block.
+    git-auto-commit-action only creates a commit if the file content
+    actually changed, so this can run every few hours without
+    spamming your commit history.
 """
 
-from __future__ import annotations
-
 import os
-import re
 import sys
-import time
-from datetime import datetime
-from pathlib import Path
-from typing import Any
+import re
+import urllib.request
+import urllib.error
+import json
 
-import requests
+API_ROOT = "https://api.github.com"
+START_MARK = "<!--REPO-LIST:START-->"
+END_MARK = "<!--REPO-LIST:END-->"
+MAX_REPOS = 5
 
-GITHUB_USERNAME = "SKYLORD69-PY"
-REPO_ROOT = Path(__file__).resolve().parent.parent
-README_PATH = REPO_ROOT / "README.md"
-API_URL = f"https://api.github.com/users/{GITHUB_USERNAME}/repos"
+# Repos that are infrastructure, not "current work", so they never
+# clutter their own showcase.
+IGNORE_REPOS = {"SKYLORD69-PY"}
 
-MAX_REPOS = 6
-MAX_DESCRIPTION_LEN = 90
-START_MARKER = "<!-- REPOS_START -->"
-END_MARKER = "<!-- REPOS_END -->"
-MAX_RETRIES = 3
-RETRY_BACKOFF_SECONDS = 5
 
-# A GITHUB_TOKEN raises the API rate limit from 60 to 5,000 requests/hour.
-# GitHub Actions injects this automatically -- no manual secret setup needed.
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+def gh_request(path, token):
+    req = urllib.request.Request(
+        f"{API_ROOT}{path}",
+        headers={
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "SKYLORD69-PY-profile-bot",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        return json.loads(resp.read().decode())
 
-LANGUAGE_ICONS = {
-    "Python": "🐍",
-    "Jupyter Notebook": "📓",
-    "JavaScript": "📜",
-    "TypeScript": "🔷",
-    "HTML": "🌐",
-    "CSS": "🎨",
-    "C++": "⚙️",
-    "C": "⚙️",
-    "Java": "☕",
-    "Go": "🐹",
-    "Rust": "🦀",
-    "Shell": "💻",
+
+def fetch_active_repos(username, token):
+    repos = gh_request(
+        f"/users/{username}/repos?type=owner&sort=pushed&direction=desc&per_page=100",
+        token,
+    )
+    active = [
+        r
+        for r in repos
+        if not r.get("fork")
+        and not r.get("archived")
+        and r.get("name") not in IGNORE_REPOS
+    ]
+    return active[:MAX_REPOS]
+
+
+LANG_COLORS = {
+    "Python": "3776AB",
+    "JavaScript": "F7DF1E",
+    "TypeScript": "3178C6",
+    "C++": "00599C",
+    "C": "A8B9CC",
+    "Jupyter Notebook": "DA5B0B",
+    "HTML": "E34F26",
+    "CSS": "1572B6",
+    "Shell": "89E051",
 }
 
 
-def request_with_retry(
-    url: str, headers: dict[str, str], params: dict[str, Any]
-) -> requests.Response:
-    """GET a URL with a few retries, so one transient hiccup doesn't fail the whole run.
-
-    Retries on network errors, rate limiting (403), and 5xx responses. Anything
-    else (404, bad credentials, etc.) fails immediately -- retrying won't fix those.
-    """
-    last_exc: requests.RequestException | None = None
-
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=15)
-        except requests.RequestException as exc:
-            last_exc = exc
-            print(f"⚠️  Network error (attempt {attempt}/{MAX_RETRIES}): {exc}", file=sys.stderr)
-        else:
-            if response.status_code == 403 and "rate limit" in response.text.lower():
-                print(
-                    f"⏳ GitHub API rate-limited (attempt {attempt}/{MAX_RETRIES}) — "
-                    "set a GITHUB_TOKEN with more quota if this keeps happening.",
-                    file=sys.stderr,
-                )
-            elif response.status_code >= 500:
-                print(
-                    f"⚠️  GitHub API returned {response.status_code} "
-                    f"(attempt {attempt}/{MAX_RETRIES})",
-                    file=sys.stderr,
-                )
-            else:
-                response.raise_for_status()
-                return response
-
-        if attempt < MAX_RETRIES:
-            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
-
-    if last_exc:
-        raise last_exc
-    raise RuntimeError(f"GitHub API request failed after {MAX_RETRIES} attempts: {url}")
+def render_row(repo):
+    name = repo["name"]
+    url = repo["html_url"]
+    desc = (repo.get("description") or "Work in progress \u2014 no description yet.").strip()
+    if len(desc) > 72:
+        desc = desc[:69].rstrip() + "..."
+    lang = repo.get("language") or "Misc"
+    stars = repo.get("stargazers_count", 0)
+    color = LANG_COLORS.get(lang, "00E5FF")
+    lang_badge = (
+        f"![{lang}](https://img.shields.io/badge/{lang.replace(' ', '%20')}-{color}"
+        f"?style=flat-square&logo=github&logoColor=white)"
+    )
+    star_str = f"\u2b50 {stars}" if stars else ""
+    return f"| **[{name}]({url})** | {desc} | {lang_badge} | {star_str} |"
 
 
-def fetch_repos() -> list[dict[str, Any]]:
-    """Fetch every repository owned by GITHUB_USERNAME, handling pagination."""
-    headers = {"Accept": "application/vnd.github+json"}
-    if GITHUB_TOKEN:
-        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
-
-    repos: list[dict[str, Any]] = []
-    page = 1
-
-    while True:
-        params = {
-            "type": "owner",
-            "sort": "pushed",
-            "direction": "desc",
-            "per_page": 100,
-            "page": page,
-        }
-        response = request_with_retry(API_URL, headers, params)
-        batch = response.json()
-
-        if not batch:
-            break
-
-        repos.extend(batch)
-
-        if len(batch) < 100:
-            break
-        page += 1
-
-    return repos
-
-
-def select_top_repos(
-    repos: list[dict[str, Any]], limit: int = MAX_REPOS
-) -> list[dict[str, Any]]:
-    """Drop forks, archived repos, and the profile repo itself; keep the most recently active."""
-    candidates = [
-        repo
-        for repo in repos
-        if not repo.get("fork")
-        and not repo.get("archived")
-        and repo.get("name", "").lower() != GITHUB_USERNAME.lower()
-    ]
-    candidates.sort(key=lambda repo: repo.get("pushed_at") or "", reverse=True)
-    return candidates[:limit]
-
-
-def truncate(text: str, limit: int = MAX_DESCRIPTION_LEN) -> str:
-    """Keep table rows tidy by capping overly long descriptions."""
-    if len(text) <= limit:
-        return text
-    return text[: limit - 3].rstrip() + "..."
-
-
-def format_commit_date(iso_timestamp: str | None) -> str:
-    """Turn a GitHub ISO-8601 push timestamp into a short, readable date."""
-    if not iso_timestamp:
-        return "—"
-    try:
-        return datetime.strptime(iso_timestamp, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
-    except ValueError:
-        return "—"
-
-
-def format_table(repos: list[dict[str, Any]]) -> str:
-    """Render the repo list as a Markdown table matching the README's terminal HUD style."""
+def render_block(repos, username):
     if not repos:
         return (
-            "| ⚠️ | No public repositories found (or the GitHub API was rate-limited). |\n"
-            "|---|---|\n"
+            f"{START_MARK}\n"
+            f"> _No public activity yet \u2014 [SKYLORD69-PY](https://github.com/{username}) "
+            f"is between quests. Check back soon._\n"
+            f"{END_MARK}"
         )
-
     header = (
-        "| Repository | 🕒 Last Commit | 🛠️ Language | Description |\n"
-        "|:------------|:--------------:|:------------|:------------|\n"
+        "| Repository | What it is | Stack | |\n"
+        "|:--|:--|:--|:--:|\n"
     )
-
-    rows = []
-    for repo in repos:
-        name = repo.get("name", "unknown")
-        url = repo.get("html_url", "#")
-        last_commit = format_commit_date(repo.get("pushed_at"))
-        language = repo.get("language") or "—"
-        icon = LANGUAGE_ICONS.get(language, "🔹")
-        description = repo.get("description") or "_No description provided._"
-        description = truncate(description.replace("|", "\\|"))
-        rows.append(f"| [**{name}**]({url}) | {last_commit} | {icon} {language} | {description} |")
-
-    return header + "\n".join(rows) + "\n"
+    rows = "\n".join(render_row(r) for r in repos)
+    return f"{START_MARK}\n{header}{rows}\n{END_MARK}"
 
 
-def inject_into_readme(table_markdown: str) -> None:
-    """Replace everything between the marker comments with the freshly rendered table."""
-    if not README_PATH.exists():
-        print(f"❌ README not found at {README_PATH}", file=sys.stderr)
-        sys.exit(1)
-
-    content = README_PATH.read_text(encoding="utf-8")
-
-    if START_MARKER not in content or END_MARKER not in content:
-        print("❌ REPOS_START / REPOS_END markers not found in README.md", file=sys.stderr)
-        sys.exit(1)
-
+def inject(readme_path, block):
+    with open(readme_path, "r", encoding="utf-8") as f:
+        content = f.read()
     pattern = re.compile(
-        re.escape(START_MARKER) + r".*?" + re.escape(END_MARKER), flags=re.DOTALL
+        re.escape(START_MARK) + r".*?" + re.escape(END_MARK), re.DOTALL
     )
-    replacement = f"{START_MARKER}\n{table_markdown}\n{END_MARKER}"
-    new_content = pattern.sub(replacement, content)
-
-    if new_content == content:
-        print("ℹ️  README.md already up to date — no changes written.")
-        return
-
-    README_PATH.write_text(new_content, encoding="utf-8")
-    print("✅ README.md updated with fresh repository data.")
+    if not pattern.search(content):
+        print(f"::error::Markers {START_MARK} / {END_MARK} not found in {readme_path}")
+        sys.exit(1)
+    new_content = pattern.sub(block, content)
+    with open(readme_path, "w", encoding="utf-8") as f:
+        f.write(new_content)
 
 
-def main() -> None:
-    print(f"📡 Fetching repositories for {GITHUB_USERNAME}...")
-    try:
-        repos = fetch_repos()
-    except requests.RequestException as exc:
-        print(f"❌ GitHub API request failed: {exc}", file=sys.stderr)
+def main():
+    token = os.environ.get("GITHUB_TOKEN")
+    username = os.environ.get("TARGET_USER", "SKYLORD69-PY")
+    readme_path = os.environ.get("README_PATH", "README.md")
+
+    if not token:
+        print("::error::GITHUB_TOKEN is not set.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"🔎 Found {len(repos)} total repositories.")
+    try:
+        repos = fetch_active_repos(username, token)
+    except urllib.error.HTTPError as e:
+        print(f"::error::GitHub API returned HTTP {e.code}: {e.reason}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:  # noqa: BLE001 - top-level safety net for a scheduled job
+        print(f"::error::Unexpected failure fetching repos: {e}", file=sys.stderr)
+        sys.exit(1)
 
-    top_repos = select_top_repos(repos)
-    print(f"🏆 Selected top {len(top_repos)} non-forked repositories by star count.")
-
-    table = format_table(top_repos)
-    inject_into_readme(table)
+    block = render_block(repos, username)
+    inject(readme_path, block)
+    print(f"Injected {len(repos)} active repo(s) into {readme_path}.")
 
 
 if __name__ == "__main__":

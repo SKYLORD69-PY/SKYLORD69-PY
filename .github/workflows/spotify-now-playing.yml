@@ -1,0 +1,39 @@
+name: Spotify Now Playing
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # GitHub's floor is ~5 min and busy periods delay it further — see SETUP.md
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: spotify-now-playing
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch now-playing / last-played and render card
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
+        run: python scripts/spotify_now_playing.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: refresh spotify now-playing card [skip ci]"
+          file_pattern: "assets/spotify.svg"

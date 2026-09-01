@@ -1,0 +1,63 @@
+name: Sync Profile Data
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6h, offset from :00 so it isn't fighting everyone else's on-the-hour jobs
+  workflow_dispatch: {}       # lets you click "Run workflow" in the Actions tab to test on demand
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_repos.py"
+      - "scripts/generate_stats.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-profile-data
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update "Currently Building" repo table
+        id: repos
+        continue-on-error: true   # isolate failure: stats should still get a chance to run below
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_USER: SKYLORD69-PY
+        run: python scripts/update_repos.py
+
+      - name: Generate stats + top-languages cards
+        id: stats
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}   # optional: enables follower + yearly-contribution counts
+          TARGET_USER: SKYLORD69-PY
+        run: python scripts/generate_stats.py
+
+      - name: Fail the run if BOTH steps failed
+        if: steps.repos.outcome == 'failure' && steps.stats.outcome == 'failure'
+        run: |
+          echo "::error::Both update_repos.py and generate_stats.py failed this run."
+          exit 1
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: sync repo table + stats cards [skip ci]"
+          file_pattern: "README.md assets/stats.svg assets/top-langs.svg"

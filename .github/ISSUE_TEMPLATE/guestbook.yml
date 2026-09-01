@@ -1,0 +1,18 @@
+name: "📖 Guestbook Entry"
+description: Leave a note on the profile guestbook.
+title: "[Guestbook] a visitor stopped by"
+labels: ["guestbook"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for stopping by! Your message below will be posted publicly
+        to `GUESTBOOK.md` on this repo. Please keep it friendly.
+  - type: textarea
+    id: message
+    attributes:
+      label: Message
+      description: Say hi, leave a tip, whatever you'd like.
+      placeholder: "Loved the Game of Life section!"
+    validations:
+      required: true

@@ -1,0 +1,49 @@
+name: Game of Life
+
+on:
+  schedule:
+    - cron: "5 2 * * *"     # once a day, 02:05 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: game-of-life
+  cancel-in-progress: true
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Render contribution graph as Conway's Game of Life
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}   # needs read:user scope — see SETUP.md
+          TARGET_USER: SKYLORD69-PY
+        run: python scripts/game_of_life.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: re-simulate game of life from latest contributions [skip ci]"
+          file_pattern: "assets/game-of-life.svg"
+
+# Note on the 60-day scheduled-workflow auto-disable:
+# GitHub disables a public repo's scheduled workflows if the repo sees
+# no activity for 60 days. Because the contribution calendar is a
+# rolling 365-day window, this workflow's *input* changes by at least
+# one day every single run — so it produces a real content diff, and
+# therefore a real commit, once a day, every day, for as long as the
+# account exists. That keeps every scheduled workflow in this repo
+# (this one included) inside the 60-day window on its own — no
+# synthetic "empty" commits required. See SETUP.md for the full
+# reasoning and an optional low-frequency safety net.

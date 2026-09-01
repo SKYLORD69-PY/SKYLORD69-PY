@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" width="320" height="130">
+<rect width="320" height="130" rx="12" fill="#0A0E14" stroke="#00E5FF" stroke-opacity="0.25"/>
+<text x="160.0" y="61.0" text-anchor="middle" font-family="monospace" font-size="12" fill="#00E5FF" opacity="0.8">⏳ awaiting first sync</text>
+<text x="160.0" y="79.0" text-anchor="middle" font-family="monospace" font-size="10" fill="#3A4552">first Actions run will populate this</text>
+</svg>
