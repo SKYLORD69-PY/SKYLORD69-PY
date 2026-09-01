@@ -53,13 +53,13 @@ Every green cell below was a real commit at some point this year. What happens t
 ### 🚀 Currently Building
 
 <!--REPO-LIST:START-->
-| Repository | What it is | Stack | |
+| Repository | What it is | Stack | Last Updated |
 |:--|:--|:--|:--:|
-| **[Guitar-Tone-FX-Pedal-Classifier](https://github.com/SKYLORD69-PY/Guitar-Tone-FX-Pedal-Classifier)** | An audio signal processing and classical ML pipeline built with Libro... | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=github&logoColor=white) | ⭐ 1 |
-| **[Campus-Quick-Snack-Case-Study](https://github.com/SKYLORD69-PY/Campus-Quick-Snack-Case-Study)** | This Repository includes my research on students studying in Vijaybho... | ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=github&logoColor=white) |  |
-| **[Global_Path_AI](https://github.com/SKYLORD69-PY/Global_Path_AI)** | Work in progress — no description yet. | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=github&logoColor=white) | ⭐ 1 |
-| **[nifty100-financial-intelligence-platform](https://github.com/SKYLORD69-PY/nifty100-financial-intelligence-platform)** | Production-grade analytics for all 92 Nifty 100 companies. ETL pipeli... | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=github&logoColor=white) | ⭐ 1 |
-| **[bluestock-mf-capstone](https://github.com/SKYLORD69-PY/bluestock-mf-capstone)** | Mutual Fund Analytics Platform capstone for Bluestock Fintech: ETL, N... | ![Jupyter Notebook](https://img.shields.io/badge/Jupyter%20Notebook-DA5B0B?style=flat-square&logo=github&logoColor=white) | ⭐ 1 |
+| **[Guitar-Tone-FX-Pedal-Classifier](https://github.com/SKYLORD69-PY/Guitar-Tone-FX-Pedal-Classifier)** | An audio signal processing and classical ML pipeline built with Libro... | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=github&logoColor=white) | — |
+| **[Campus-Quick-Snack-Case-Study](https://github.com/SKYLORD69-PY/Campus-Quick-Snack-Case-Study)** | This Repository includes my research on students studying in Vijaybho... | ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=github&logoColor=white) | — |
+| **[Global_Path_AI](https://github.com/SKYLORD69-PY/Global_Path_AI)** | Work in progress — no description yet. | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=github&logoColor=white) | — |
+| **[nifty100-financial-intelligence-platform](https://github.com/SKYLORD69-PY/nifty100-financial-intelligence-platform)** | Production-grade analytics for all 92 Nifty 100 companies. ETL pipeli... | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=github&logoColor=white) | — |
+| **[bluestock-mf-capstone](https://github.com/SKYLORD69-PY/bluestock-mf-capstone)** | Mutual Fund Analytics Platform capstone for Bluestock Fintech: ETL, N... | ![Jupyter Notebook](https://img.shields.io/badge/Jupyter%20Notebook-DA5B0B?style=flat-square&logo=github&logoColor=white) | — |
 <!--REPO-LIST:END-->
 
 <br/>

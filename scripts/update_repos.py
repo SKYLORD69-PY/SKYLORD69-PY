@@ -27,6 +27,7 @@ import re
 import urllib.request
 import urllib.error
 import json
+from datetime import datetime
 
 API_ROOT = "https://api.github.com"
 START_MARK = "<!--REPO-LIST:START-->"
@@ -80,21 +81,31 @@ LANG_COLORS = {
 }
 
 
+def format_date(iso_str):
+    """Convert ISO 8601 date to readable format (YYYY-MM-DD)."""
+    if not iso_str:
+        return "—"
+    try:
+        dt = datetime.strptime(iso_str, "%Y-%m-%dT%H:%M:%SZ")
+        return dt.strftime("%Y-%m-%d")
+    except (ValueError, TypeError):
+        return "—"
+
+
 def render_row(repo):
     name = repo["name"]
     url = repo["html_url"]
-    desc = (repo.get("description") or "Work in progress \u2014 no description yet.").strip()
+    desc = (repo.get("description") or "Work in progress — no description yet.").strip()
     if len(desc) > 72:
         desc = desc[:69].rstrip() + "..."
     lang = repo.get("language") or "Misc"
-    stars = repo.get("stargazers_count", 0)
+    last_updated = format_date(repo.get("pushed_at"))
     color = LANG_COLORS.get(lang, "00E5FF")
     lang_badge = (
         f"![{lang}](https://img.shields.io/badge/{lang.replace(' ', '%20')}-{color}"
         f"?style=flat-square&logo=github&logoColor=white)"
     )
-    star_str = f"\u2b50 {stars}" if stars else ""
-    return f"| **[{name}]({url})** | {desc} | {lang_badge} | {star_str} |"
+    return f"| **[{name}]({url})** | {desc} | {lang_badge} | {last_updated} |"
 
 
 def render_block(repos, username):
@@ -106,7 +117,7 @@ def render_block(repos, username):
             f"{END_MARK}"
         )
     header = (
-        "| Repository | What it is | Stack | |\n"
+        "| Repository | What it is | Stack | Last Updated |\n"
         "|:--|:--|:--|:--:|\n"
     )
     rows = "\n".join(render_row(r) for r in repos)
