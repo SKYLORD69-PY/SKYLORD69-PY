@@ -7,11 +7,11 @@ on `github.com/SKYLORD69-PY`. This guide gets every moving part running.
 
 ```mermaid
 flowchart LR
-    subgraph Cron["Scheduled GitHub Actions"]
-        A[sync-profile-data.yml<br/>every 6h]
-        B[game-of-life.yml<br/>daily]
-        C[spotify-now-playing.yml<br/>every 10min]
-        D[activity-feed.yml<br/>every 6h]
+      subgraph Manual["Manually triggered workflows"]
+         A[sync-profile-data.yml]
+         B[game-of-life.yml]
+         C[spotify-now-playing.yml]
+         D[activity-feed.yml]
     end
     subgraph Event["Event-triggered"]
         E[guestbook.yml<br/>on new issue]
@@ -123,12 +123,12 @@ Have a blog with an RSS/Atom feed? Add its URL as a repo **variable**
 
 ## Step 4 — turn everything on and verify
 
-Actions are enabled by default, but scheduled triggers only start
-counting from whenever the workflow file lands on the default
-branch — don't wait for the cron. For each of the five workflow
-files: **Actions tab → select the workflow → "Run workflow"** (the
-`workflow_dispatch` trigger every workflow here has, specifically for
-this). Watch it go green. If it goes red, click in — the scripts are
+Actions are enabled by default. These profile-update workflows are
+manual-only so the repository does not accumulate multiple automated
+commits every day. For each workflow you want to run: **Actions tab →
+select the workflow → "Run workflow"** (the `workflow_dispatch`
+trigger every workflow here has). Watch it go green. If it goes red, click
+in — the scripts are
 written to fail with a specific `::error::` message rather than a
 bare stack trace, so the log will tell you exactly which secret is
 missing or wrong.
@@ -156,26 +156,18 @@ hit that wall and die out almost immediately. Treating it as a torus
 animation instead of fizzling into a static frame after a few
 generations.
 
-**Why isn't there a dedicated "keepalive" Action?** GitHub disables a
-public repo's *scheduled* workflows after 60 days with no repository
-activity. The common fix is a third-party Action that makes an empty
-commit on a timer — but there are user reports ([discussion
-here](https://dev.to/gautamkrishnar/how-to-prevent-github-from-suspending-your-cronjob-based-triggers-knf))
-of accounts running purely-synthetic keepalive commits getting
-flagged, and the pattern's own author has noted it may brush up
-against GitHub's Terms of Service. This repo sidesteps the problem
-structurally instead: `game-of-life.yml` re-derives its input from a
-rolling 365-day window every single day, so its output changes —
-and it commits — daily, for real reasons, indefinitely. `keepalive.yml`
-still exists as a once-a-month check that only commits if literally
-everything else has gone quiet for 50+ days, and even then it commits
-one honest, human-readable timestamp rather than an empty diff.
+**Why are the profile workflows manual-only?** Each workflow writes a
+different part of the profile, and independent schedules can create many
+small commits in one day. Keeping their `workflow_dispatch` triggers
+means you can still refresh any section when you choose, while normal
+repository activity stays to deliberate updates. The guestbook remains
+event-driven because a new signed entry is an explicit user action.
 
 **Why does the auto-commit not trigger the *other* workflows?**
 Commits made using the default `GITHUB_TOKEN` deliberately don't
 trigger other `push`-based workflows (GitHub's own loop-prevention).
-It's a non-issue here since every workflow is `schedule` /
-`workflow_dispatch` triggered, never `push`-chained to another.
+It's a non-issue here since profile workflows are `workflow_dispatch`
+triggered and the guestbook is event-driven; none are `push`-chained.
 
 **Error-handling philosophy.** Every script treats "nothing to show
 yet" (empty account, nothing playing) as a quiet success, and treats

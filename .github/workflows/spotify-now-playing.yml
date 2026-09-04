@@ -1,8 +1,6 @@
 name: Spotify Now Playing
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"   # GitHub's floor is ~5 min and busy periods delay it further — see SETUP.md
   workflow_dispatch: {}
 
 permissions:

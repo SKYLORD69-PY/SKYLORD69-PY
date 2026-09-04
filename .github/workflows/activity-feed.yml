@@ -1,8 +1,6 @@
 name: Activity Feed
 
 on:
-  schedule:
-    - cron: "43 */6 * * *"
   workflow_dispatch: {}
 
 permissions:

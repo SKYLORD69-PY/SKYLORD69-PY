@@ -1,14 +1,7 @@
 name: Sync Profile Data
 
 on:
-  schedule:
-    - cron: "17 */6 * * *"   # every 6h, offset from :00 so it isn't fighting everyone else's on-the-hour jobs
-  workflow_dispatch: {}       # lets you click "Run workflow" in the Actions tab to test on demand
-  push:
-    branches: [main]
-    paths:
-      - "scripts/update_repos.py"
-      - "scripts/generate_stats.py"
+  workflow_dispatch: {}       # lets you click "Run workflow" in the Actions tab to update on demand
 
 permissions:
   contents: write

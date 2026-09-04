@@ -1,21 +1,7 @@
 name: Keepalive Safety Net
 
-# Belt-and-suspenders only. In normal operation this workflow finds
-# nothing to do and exits without committing:
-#
-#   - game-of-life.yml commits daily, because the rolling contribution
-#     window guarantees a real content change every day.
-#   - sync-profile-data.yml, activity-feed.yml, and
-#     spotify-now-playing.yml each commit on their own schedules
-#     whenever there's something new.
-#
-# For every one of those to go quiet for 50+ days, you'd need GH_PAT
-# to be dead/expired *and* the account to have zero repo activity,
-# zero Spotify plays, and zero new followers/stars for that whole
-# stretch. Unlikely -- but if it ever happens, this workflow notices
-# and makes one small, honest commit (a "last verified alive"
-# timestamp, not a blank/fake one) so GitHub doesn't disable the
-# other scheduled workflows for inactivity.
+# Optional safety net. Run this manually only when you deliberately
+# want to record a last-verified-alive timestamp.
 #
 # This intentionally does NOT use a third-party "keepalive" Action.
 # Some users have reported those tripping GitHub's abuse detection
@@ -24,8 +10,6 @@ name: Keepalive Safety Net
 # only acts when genuinely necessary avoids that risk entirely.
 
 on:
-  schedule:
-    - cron: "0 3 3 * *"   # once a month is plenty for a 60-day threshold
   workflow_dispatch: {}
 
 permissions:
