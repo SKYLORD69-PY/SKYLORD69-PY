@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-repository-commit
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -23,7 +27,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+
+      - name: Allow at most two repository commits per UTC day
+        id: commit_gate
+        run: |
+          git fetch origin main --quiet
+          commits_today=$(git rev-list --count --since="$(date -u +%Y-%m-%d) 00:00:00 UTC" origin/main)
+          echo "Repository commits today: $commits_today"
+          if [ "$commits_today" -lt 2 ]; then
+            echo "allowed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "allowed=false" >> "$GITHUB_OUTPUT"
+            echo "Daily commit limit reached; skipping this update."
+          fi
 
       - name: Check age of last commit
         id: age
@@ -35,7 +52,7 @@ jobs:
           echo "days=$days" >> "$GITHUB_OUTPUT"
 
       - name: Touch a real timestamp file if we're approaching the 60-day limit
-        if: fromJSON(steps.age.outputs.days) >= 50
+        if: fromJSON(steps.age.outputs.days) >= 50 && steps.commit_gate.outputs.allowed == 'true'
         run: |
           mkdir -p data
           date -u +"Last verified alive: %Y-%m-%dT%H:%M:%SZ" > data/.keepalive

@@ -163,6 +163,11 @@ means you can still refresh any section when you choose, while normal
 repository activity stays to deliberate updates. The guestbook remains
 event-driven because a new signed entry is an explicit user action.
 
+Every workflow that can write to the repository also shares a concurrency
+lock and checks the current `main` history before committing. Once two
+commits exist on the same UTC calendar day, later workflow runs skip their
+commit step until the next day.
+
 **Why does the auto-commit not trigger the *other* workflows?**
 Commits made using the default `GITHUB_TOKEN` deliberately don't
 trigger other `push`-based workflows (GitHub's own loop-prevention).

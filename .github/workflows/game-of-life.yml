@@ -7,8 +7,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: game-of-life
-  cancel-in-progress: true
+  group: daily-repository-commit
+  cancel-in-progress: false
 
 jobs:
   simulate:
@@ -17,6 +17,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Allow at most two repository commits per UTC day
+        id: commit_gate
+        run: |
+          git fetch origin main --quiet
+          commits_today=$(git rev-list --count --since="$(date -u +%Y-%m-%d) 00:00:00 UTC" origin/main)
+          echo "Repository commits today: $commits_today"
+          if [ "$commits_today" -lt 2 ]; then
+            echo "allowed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "allowed=false" >> "$GITHUB_OUTPUT"
+            echo "Daily commit limit reached; skipping this update."
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,6 +45,7 @@ jobs:
         run: python scripts/game_of_life.py
 
       - name: Commit changes
+        if: steps.commit_gate.outputs.allowed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: re-simulate game of life from latest contributions [skip ci]"
